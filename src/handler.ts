@@ -12,18 +12,20 @@ export const hello: APIGatewayProxyHandler = async (event, _context) => {
   const coll = db.collection(COLLECTION_NAME);
 
   const result = await coll.aggregate([
+    // Rename our fields and remove unnecessary ones
     { "$project": {
         "datetime": "$meta.time",
         "ophelia": "$data.soil.0x24",
         "elinor": "$data.soil.0x26",
       }
     },
+    // Group by buckets of 2 hours
     { "$group": {
         "_id": {
           "$floor": {
             "$divide": [
               { "$toLong": "$datetime" },
-              7.2e6
+              7.2e6 // 2 hours in milliseconds
             ]
           }
         },
@@ -32,12 +34,14 @@ export const hello: APIGatewayProxyHandler = async (event, _context) => {
         "elinor": { "$avg": "$elinor" },
       }
     },
+    // Sort chronologically
     {
       "$sort": {
         "datetime": 1
       }
     },
-    {"$group": {
+    // Change output to be separate arrays
+    { "$group": {
         "_id": 1,
         "datetime": { "$push": "$datetime" },
         "ophelia": { "$push": "$ophelia" },
