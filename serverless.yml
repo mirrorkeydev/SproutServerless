@@ -21,6 +21,7 @@ provider:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    URL: ${file(./secrets.yaml):url}
   region: us-west-2
   memorySize: 128
   timeout: 10
