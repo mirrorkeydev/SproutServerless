@@ -36,6 +36,13 @@ export const hello: APIGatewayProxyHandler = async (event, _context) => {
       "$sort": {
         "datetime": 1
       }
+    },
+    {"$group": {
+        "_id": 1,
+        "datetime": { "$push": "$datetime" },
+        "ophelia": { "$push": "$ophelia" },
+        "elinor": { "$push": "$elinor" },
+      }
     }
   ]).limit(100).toArray();
 
