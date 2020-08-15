@@ -27,9 +27,15 @@ provider:
   timeout: 10
 
 functions:
-  hello:
-    handler: src/handler.hello # file.function
+  soilmoisture:
+    handler: src/handler.moisture # file.function
     events:
       - http:
           method: get
-          path: hello # api/hello
+          path: soilmoisture # api/soilmoisture
+  temperature:
+    handler: src/handler.temperature # file.function
+    events:
+      - http:
+          method: get
+          path: temperature
