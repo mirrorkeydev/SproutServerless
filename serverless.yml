@@ -39,3 +39,15 @@ functions:
       - http:
           method: get
           path: temperature
+  pressure:
+    handler: src/handler.pressure # file.function
+    events:
+      - http:
+          method: get
+          path: pressure
+  light:
+    handler: src/handler.light # file.function
+    events:
+      - http:
+          method: get
+          path: light
