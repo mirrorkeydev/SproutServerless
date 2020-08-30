@@ -21,8 +21,8 @@ export const plantdata: APIGatewayProxyHandler = async (event, _context) => {
     // Rename our fields and remove unnecessary ones
     { "$project": {
         "datetime": "$meta.time",
-        "ophelia": "$data.soil.0x24",
-        "elinor": "$data.soil.0x26",
+        "ophelia": "$data.soil.0x26",
+        "elinor": "$data.soil.0x24",
         "temp": "$data.climate.tempurature",
         "pressure": "$data.climate.pressure",
         "light": "$data.lux",
