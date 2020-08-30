@@ -1,7 +1,5 @@
 service:
   name: sproutserverless
-  package:
-    individually: true
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
