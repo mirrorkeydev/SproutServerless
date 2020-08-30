@@ -27,27 +27,9 @@ provider:
   timeout: 10
 
 functions:
-  soilmoisture:
-    handler: src/handler.moisture # file.function
+  plantdata:
+    handler: src/handler.plantdata # file.function
     events:
       - http:
           method: get
-          path: soilmoisture # api/soilmoisture
-  temperature:
-    handler: src/handler.temperature # file.function
-    events:
-      - http:
-          method: get
-          path: temperature
-  pressure:
-    handler: src/handler.pressure # file.function
-    events:
-      - http:
-          method: get
-          path: pressure
-  light:
-    handler: src/handler.light # file.function
-    events:
-      - http:
-          method: get
-          path: light
+          path: plantdata # api/soilmoisture
