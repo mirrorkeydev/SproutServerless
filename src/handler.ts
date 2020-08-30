@@ -70,5 +70,8 @@ export const plantdata: APIGatewayProxyHandler = async (event, _context) => {
     body: JSON.stringify({
       message: result,
     }),
+    headers: {
+      'Access-Control-Allow-Origin': 'https://mirrorkey.dev',
+    },
   };
 }
