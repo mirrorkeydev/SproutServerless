@@ -5,9 +5,15 @@ import 'source-map-support/register';
 const DB_NAME = "plantdata";
 const COLLECTION_NAME = "plantdata";
 
-export const plantdata: APIGatewayProxyHandler = async (event, _context) => {
+let client: MongoClient | null = null;
 
-  const client = await MongoClient.connect(process.env.URL as string);
+export const plantdata: APIGatewayProxyHandler = async (_event, context) => {
+  // See https://docs.atlas.mongodb.com/best-practices-connecting-to-aws-lambda/
+  context.callbackWaitsForEmptyEventLoop = false
+  if (client === null || !client.isConnected()) {
+    client = await MongoClient.connect(process.env.URL as string);
+  }
+  // access plant data
   const db = client.db(DB_NAME);
   const coll = db.collection(COLLECTION_NAME);
 
