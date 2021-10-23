@@ -11,8 +11,8 @@ export const plantdata: APIGatewayProxyHandler = (_event, context, callback) => 
   (async () => {
     // See https://docs.atlas.mongodb.com/best-practices-connecting-to-aws-lambda/
     context.callbackWaitsForEmptyEventLoop = false
-    if (client === null || !client.isConnected()) {
-      client = await MongoClient.connect(process.env.URL as string, { useUnifiedTopology: true });
+    if (client === null) {
+      client = await MongoClient.connect(process.env.URL as string);
     }
     // access plant data
     const db = client.db(DB_NAME);
@@ -28,8 +28,22 @@ export const plantdata: APIGatewayProxyHandler = (_event, context, callback) => 
       // Rename our fields and remove unnecessary ones
       { "$project": {
           "datetime": "$meta.time",
-          "ophelia": "$data.soil.0x26",
-          "elinor": "$data.soil.0x24",
+          "ophelia": { "$divide": [0.0000005 * 1e12 /* convert from picofarads to something reasonable */, 
+            { "$multiply": [10000, 
+                { "$subtract": [
+                    { "$ln": { "$divide": [{ "$add": [{ "$multiply": [{ "$divide": ["$data.soil.0x26", 1024] }, 3.3] }, 0.28]}, 3.3]}},
+                    { "$ln": { "$subtract": [1, { "$divide": [{ "$add": [{ "$multiply": [{ "$divide": ["$data.soil.0x26", 1024] }, 3.3] }, 0.28]}, 3.3]}]}}
+                ]}
+            ]}
+        ]},
+          "elinor": { "$divide": [0.0000005 * 1e12 /* convert from picofarads to something reasonable */, 
+            { "$multiply": [10000, 
+                { "$subtract": [
+                    { "$ln": { "$divide": [{ "$add": [{ "$multiply": [{ "$divide": ["$data.soil.0x24", 1024] }, 3.3] }, 0.28]}, 3.3]}},
+                    { "$ln": { "$subtract": [1, { "$divide": [{ "$add": [{ "$multiply": [{ "$divide": ["$data.soil.0x24", 1024] }, 3.3] }, 0.28]}, 3.3]}]}}
+                ]}
+            ]}
+        ]},
           "temp": "$data.climate.tempurature",
           "pressure": "$data.climate.pressure",
           "humidity": "$data.humidity",
